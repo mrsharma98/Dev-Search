@@ -26,7 +26,7 @@ def createProject(request):
     # if req is post -- then process the form
     # print(request.POST) -- to get the form POST data
     # gives a dictionary
-    form = ProjectForm(request.POST)
+    form = ProjectForm(request.POST, request.FILES)
     if form.is_valid():
       form.save()
       return redirect('projects') # -- projects -- url name
@@ -41,7 +41,7 @@ def updateProject(request, pk):
   # by passing the instance will prefill all the project data
 
   if request.method == 'POST':
-    form = ProjectForm(request.POST, instance=project)
+    form = ProjectForm(request.POST, request.FILES, instance=project)
     # with data, we need to tell what instance/obj we are updating, so sending the project
     if form.is_valid():
       form.save()

@@ -1,4 +1,5 @@
 from ast import Num
+from email.policy import default
 from django.db import models
 import uuid
 
@@ -10,6 +11,9 @@ class Project(models.Model):
   # null --> this value can be null
   # blank --> when we submit the form, the form will accept it even if this field is blank
   demo_link = models.CharField(max_length=2000, null=True, blank=True)
+
+  featured_image = models.ImageField(null=True, blank=True, default="default.jpg")
+
   source_link = models.CharField(max_length=2000, null=True, blank=True)
   tags = models.ManyToManyField('Tag', blank=True)
   # putting Tag in quotes as we have defined Tag model below and not above the Project model
