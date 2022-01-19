@@ -45,7 +45,7 @@
                   <a
                     class="project__author"
                     href="{% url 'project' project.id %}"
-                    >By Manish Sharma</a
+                    >By {{ project.owner.name }}</a
                   >
                 </p>
                 <p class="project--rating">

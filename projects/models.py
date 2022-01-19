@@ -2,10 +2,14 @@ from ast import Num
 from email.policy import default
 from django.db import models
 import uuid
+from users.models import Profile
 
 # Create your models here.
 
 class Project(models.Model):
+  owner = models.ForeignKey(Profile, null=True, blank=True, on_delete=models.SET_NULL)
+  # if user profile has deleted then owner value will set to null
+
   title = models.CharField(max_length=200)
   description = models.TextField(null=True, blank=True)
   # null --> this value can be null

@@ -1,5 +1,4 @@
 staticfiles
 __pycache__
-migrations
 db.sqlite3
 .vscode/
