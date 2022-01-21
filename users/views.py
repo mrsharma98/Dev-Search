@@ -64,7 +64,7 @@ def loginUser(request):
 def logoutUser(request):
   # logout -- takes request and user -- deletes the session from the cookie
   logout(request)
-  messages.error(request, 'User was logged oSut!')
+  messages.info(request, 'User was logged out')
   return redirect('login')
 
 
