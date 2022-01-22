@@ -24,6 +24,18 @@ def createProfile(sender, instance, created, **kwargs):
       email = user.email,
       name = user.first_name
     )
+
+
+# just to update User model in case common field in User and profile model if the profile model is updated
+def updateUser(sender, instance, created, **kwargs):
+  profile = instance
+  user = profile.user
+
+  if created == False:
+    user.first_name = profile.name
+    user.username = profile.username
+    user.email = profile.email
+    user.save()
     
 
 # when we deleted user, the profile gets deleted automatically bcz of relation we have in Profile model
@@ -35,4 +47,5 @@ def deleteUser(sender, instance, **kwargs):
 
 # we can use decorators instead of connecting like this
 post_save.connect(createProfile, sender=User)
+post_save.connect(updateUser, sender=Profile)
 post_delete.connect(deleteUser, sender=Profile)

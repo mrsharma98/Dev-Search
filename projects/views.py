@@ -21,7 +21,7 @@ def project(request, pk):
 # sending the user to the login page if they are not logged in
 @login_required(login_url="login")
 def createProject(request):
-
+  profile = request.user.profile
   form = ProjectForm()
   # this is for parsing in the context
 
@@ -31,8 +31,10 @@ def createProject(request):
     # gives a dictionary
     form = ProjectForm(request.POST, request.FILES)
     if form.is_valid():
-      form.save()
-      return redirect('projects') # -- projects -- url name
+      project = form.save(commit=False)
+      project.owner = profile
+      project.save()
+      return redirect('account') # -- projects -- url name
 
   context = {'form': form}
   return render(request, 'projects/project_form.html', context)
@@ -40,7 +42,10 @@ def createProject(request):
 
 @login_required(login_url="login")
 def updateProject(request, pk):
-  project = Project.objects.get(id=pk)
+  profile = request.user.profile
+  project = profile.project_set.get(id=pk)
+  # this makes sure that only the owner can update the project
+
   form = ProjectForm(instance=project)
   # by passing the instance will prefill all the project data
 
@@ -49,7 +54,7 @@ def updateProject(request, pk):
     # with data, we need to tell what instance/obj we are updating, so sending the project
     if form.is_valid():
       form.save()
-      return redirect('projects') # -- projects -- url name
+      return redirect('account') # -- projects -- url name
 
   context = {'form': form}
   return render(request, 'projects/project_form.html', context)
@@ -57,11 +62,12 @@ def updateProject(request, pk):
 
 @login_required(login_url="login")
 def deleteProject(request, pk):
-  project = Project.objects.get(id=pk)
-  context = {'object': project}
+  profile = request.user.profile
+  project = profile.project_set.get(id=pk)
 
   if request.method == 'POST':
     project.delete()
-    return redirect('projects')
-
-  return render(request, 'projects/delete_template.html', context)
+    return redirect('account')
+  
+  context = {'object': project}
+  return render(request, 'delete_template.html', context)
