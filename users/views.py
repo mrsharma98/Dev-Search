@@ -1,12 +1,12 @@
 from django.shortcuts import render, redirect
-from .models import Profile, Skill
+from .models import Profile
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
 from .forms import CustomUserCreationForm, ProfileForm, SkillForm
-from .utils import searchProfiles
+from .utils import searchProfiles, paginateProfiles
 
 
 # Create your views here.
@@ -14,7 +14,9 @@ from .utils import searchProfiles
 def profiles(request):
   profiles, search_query = searchProfiles(request)
 
-  context = {'profiles': profiles, 'search_query': search_query}
+  custom_range, profiles = paginateProfiles(request, profiles, 6)
+
+  context = {'profiles': profiles, 'search_query': search_query, 'custom_range': custom_range}
   return render(request, 'users/profiles.html', context)
 
 
